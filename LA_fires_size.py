@@ -1,11 +1,19 @@
 import pandas as pd
 import folium
-from folium.plugins import TimestampedGeoJson, FeatureGroupSubGroup
-from folium import LayerControl
+from folium.plugins import TimestampedGeoJson
+import requests
+from io import BytesIO
 
 # Загрузка и подготовка данных
 # URL вашего файла на GitHub
-INPUT_FILE = "https://raw.githubusercontent.com/Blinkinthemirrow/LA-fires-chrono-map/LA_fires.xlsx
+INPUT_FILE = "https://raw.githubusercontent.com/Blinkinthemirrow/LA-fires-chrono-map/main/LA_fires.xlsx"
+
+# Чтение данных с GitHub
+response = requests.get(INPUT_FILE)
+if response.status_code == 200:
+    fires_data = pd.read_excel(BytesIO(response.content))
+else:
+    raise Exception(f"Не удалось загрузить данные. Код ошибки: {response.status_code}")
 
 # Оставляем нужные колонки
 fires_cleaned = fires_data[['incident_date_created', 'incident_acres_burned', 'incident_longitude', 'incident_latitude']].copy()
@@ -29,6 +37,7 @@ years = sorted(fires_cleaned['date'].dt.year.unique())
 year_layers = {}
 for year in years:
     year_layers[year] = folium.FeatureGroup(name=str(year), show=False).add_to(fire_map)
+
 # Функция для выбора цвета в зависимости от года
 def get_color_by_year(year):
     color_map = {
