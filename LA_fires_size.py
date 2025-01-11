@@ -4,8 +4,8 @@ from folium.plugins import TimestampedGeoJson, FeatureGroupSubGroup
 from folium import LayerControl
 
 # Загрузка и подготовка данных
-INPUT_FILE = r"C:\Users\Petercoldbeer\Desktop\LA_fires.xlsx"  # Укажите путь к вашему файлу
-fires_data = pd.read_excel(INPUT_FILE)
+# URL вашего файла на GitHub
+INPUT_FILE = "https://raw.githubusercontent.com/Blinkinthemirrow/LA-fires-chrono-map/LA_fires.xlsx
 
 # Оставляем нужные колонки
 fires_cleaned = fires_data[['incident_date_created', 'incident_acres_burned', 'incident_longitude', 'incident_latitude']].copy()
